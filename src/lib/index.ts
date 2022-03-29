@@ -2,32 +2,22 @@ import { writable } from 'svelte/store';
 import {
 	createUserWithEmailAndPassword as firebaseCreateUserWithEmailAndPassword,
 	signInWithEmailAndPassword as firebaseSignInWithEmailAndPassword,
-	GoogleAuthProvider,
 	signInWithRedirect,
 	signInWithPopup,
-	FacebookAuthProvider,
-	TwitterAuthProvider,
-	GithubAuthProvider
 } from 'firebase/auth';
 import type { Auth } from 'firebase/auth';
 import type { UserCredential, AuthError } from 'firebase/auth';
 import type { Writable } from 'svelte/store';
+import type { AuthProviders } from './types'
 
 type AuthProviderName = 'google' | 'facebook' | 'twitter' | 'github';
-
-const providers = {
-	google: new GoogleAuthProvider(),
-	facebook: new FacebookAuthProvider(),
-	twitter: new TwitterAuthProvider(),
-	github: new GithubAuthProvider()
-};
 
 export interface AuthState {
 	isLoading: boolean;
 	user: UserCredential | null;
 }
 
-const createFirebaseAuth = (auth: Auth) => {
+const createFirebaseAuth = (auth: Auth, providers: AuthProviders) => {
 	const { subscribe, update }: Writable<AuthState> = writable({ isLoading: false, user: null });
 
 	const asyncRun = async <T>(operation: () => Promise<T>) => {

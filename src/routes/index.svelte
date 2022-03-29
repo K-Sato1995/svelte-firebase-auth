@@ -1,9 +1,19 @@
 <script>
 	import Auth from '$lib/auth.svelte';
 	import { initializeApp } from 'firebase/app';
-	import { getAuth } from 'firebase/auth';
+	import {
+		getAuth,
+		GoogleAuthProvider,
+		FacebookAuthProvider,
+		TwitterAuthProvider,
+		GithubAuthProvider
+	} from 'firebase/auth';
 
-	const firebaseConfig = {};
+	const firebaseConfig = {
+		apiKey: 'AIzaSyCuOi8s4GbjwAhKkzbxlZXaSq9q_PKIMwM',
+		authDomain: 'fir-test-ab8f6.firebaseapp.com',
+		projectId: 'fir-test-ab8f6'
+	};
 
 	const firebaseApp = initializeApp(firebaseConfig);
 	const firebaseAuth = getAuth(firebaseApp);
@@ -11,7 +21,15 @@
 
 <div class="wrapper">
 	<Auth
-		{firebaseAuth}
+		firebaseAuthProps={{
+			firebaseAuth: firebaseAuth,
+			providers: {
+				googleProvider: new GoogleAuthProvider(),
+				facebookProvider: new FacebookAuthProvider(),
+				twitterProvider: new TwitterAuthProvider(),
+				githubProvider: new GithubAuthProvider()
+			}
+		}}
 		let:svelteFirebaseAuthState
 		let:signInWithEmailAndPassword
 		let:createUserWithEmailAndPassword
