@@ -1,22 +1,14 @@
 <script lang="ts">
 	import { onMount } from 'svelte/internal';
-	import { svelteFirebaseAuth } from './index';
-	import { auth } from './index';
+	import { createFirebaseAuth } from './index';
+	import type { Auth } from 'firebase/auth';
+	// import type { Writable } from 'svelte/store';
+	// import type { AuthState } from './index'
+	export let firebaseAuth: Auth;
 
-  export let test: string
-	// const getCurrentUser = (auth) => {
-	//   return new Promise((resolve, reject) => {
-	//     const unsubscribe = auth.onAuthStateChanged(user => {
-	//         unsubscribe();
-	//         resolve(user);
-	//     }, reject);
-	//   });
-	// }
-
-  console.log(test)
-	// wait for fetching the user?
+	const svelteFirebaseAuth = createFirebaseAuth(firebaseAuth);
 	onMount(() => {
-		const unsubscribeAuthStateListener = auth.onAuthStateChanged((user) => {
+		const unsubscribeAuthStateListener = firebaseAuth.onAuthStateChanged((user) => {
 			if (user) {
 				console.log(user);
 				svelteFirebaseAuth.updateUserState(user);

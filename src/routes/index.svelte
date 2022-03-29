@@ -1,9 +1,17 @@
 <script>
 	import Auth from '$lib/auth.svelte';
+	import { initializeApp } from 'firebase/app';
+	import { getAuth } from 'firebase/auth';
+
+	const firebaseConfig = {};
+
+	const firebaseApp = initializeApp(firebaseConfig);
+	const firebaseAuth = getAuth(firebaseApp);
 </script>
 
 <div class="wrapper">
 	<Auth
+		{firebaseAuth}
 		let:svelteFirebaseAuthState
 		let:signInWithEmailAndPassword
 		let:createUserWithEmailAndPassword
@@ -12,7 +20,6 @@
 		let:signInWithFacebook
 		let:signInWithTwitter
 		let:signInWithGithub
-    test="WAs"
 	>
 		{#if svelteFirebaseAuthState.isLoading}
 			<h1>Loading</h1>
@@ -77,15 +84,6 @@
 			>
 				Sign In with Github
 			</button>
-
-
-			<button
-			type="button"
-			class="mt-3"
-			on:click={() => {
-				signInWithPhoneNumber('9053019178', '222222');
-			}}>SignIn with phonenumber</button
-		>
 		{/if}
 	</Auth>
 </div>

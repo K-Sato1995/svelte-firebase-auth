@@ -1,21 +1,17 @@
 import { writable } from 'svelte/store';
-import { initializeApp } from 'firebase/app';
 import {
 	createUserWithEmailAndPassword as firebaseCreateUserWithEmailAndPassword,
 	signInWithEmailAndPassword as firebaseSignInWithEmailAndPassword,
-	getAuth,
 	GoogleAuthProvider,
 	signInWithRedirect,
 	signInWithPopup,
 	FacebookAuthProvider,
 	TwitterAuthProvider,
-	GithubAuthProvider,
+	GithubAuthProvider
 } from 'firebase/auth';
+import type { Auth } from 'firebase/auth';
 import type { UserCredential, AuthError } from 'firebase/auth';
-import type { Writable } from 'svelte/store'
-
-const firebaseConfig = {
-};
+import type { Writable } from 'svelte/store';
 
 type AuthProviderName = 'google' | 'facebook' | 'twitter' | 'github';
 
@@ -26,27 +22,23 @@ const providers = {
 	github: new GithubAuthProvider()
 };
 
-const app = initializeApp(firebaseConfig);
-export const auth = getAuth(app);
-
-interface AuthState {
+export interface AuthState {
 	isLoading: boolean;
 	user: UserCredential | null;
 }
 
-const createFirebaseAuth = () => {
-	// Works
+const createFirebaseAuth = (auth: Auth) => {
 	const { subscribe, update }: Writable<AuthState> = writable({ isLoading: false, user: null });
 
 	const asyncRun = async <T>(operation: () => Promise<T>) => {
 		try {
-			svelteFirebaseAuth.toggleIsLoading(true);
+			toggleIsLoading(true);
 			const result = await operation();
 			return result;
 		} catch (error) {
 			return error as AuthError;
 		} finally {
-			svelteFirebaseAuth.toggleIsLoading(false);
+			toggleIsLoading(false);
 		}
 	};
 
@@ -92,6 +84,11 @@ const createFirebaseAuth = () => {
 
 	const signInWithGithub = (isRedirect = false) => signInWithProvider('github', isRedirect);
 
+	const toggleIsLoading = (loading: boolean) => {
+		update((state) => {
+			return { ...state, isLoading: loading };
+		});
+	};
 	return {
 		subscribe,
 		createUserWithEmailAndPassword,
@@ -106,12 +103,8 @@ const createFirebaseAuth = () => {
 				return { ...state, user: user };
 			});
 		},
-		toggleIsLoading: (loading) => {
-			return update((state) => {
-				return { ...state, isLoading: loading };
-			});
-		}
+		toggleIsLoading
 	};
 };
 
-export const svelteFirebaseAuth = createFirebaseAuth();
+export { createFirebaseAuth };
