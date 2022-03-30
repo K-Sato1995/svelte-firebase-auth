@@ -10,9 +10,9 @@
 	} from 'firebase/auth';
 
 	const firebaseConfig = {
-		apiKey: 'AIzaSyCuOi8s4GbjwAhKkzbxlZXaSq9q_PKIMwM',
-		authDomain: 'fir-test-ab8f6.firebaseapp.com',
-		projectId: 'fir-test-ab8f6'
+		apiKey: 'api-key-here',
+		authDomain: 'authDomainHere',
+		projectId: 'projectId'
 	};
 
 	const firebaseApp = initializeApp(firebaseConfig);
