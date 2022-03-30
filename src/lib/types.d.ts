@@ -3,7 +3,8 @@ import type {
 	GoogleAuthProvider,
 	FacebookAuthProvider,
 	TwitterAuthProvider,
-	GithubAuthProvider
+	GithubAuthProvider,
+  AuthError
 } from 'firebase/auth';
 
 type AuthProviderName = 'googleProvider' | 'facebookProvider' | 'twitterProvider' | 'githubProvider';
@@ -23,6 +24,7 @@ interface SvelteFirebaseAuthProps {
 export interface AuthState {
 	isLoading: boolean;
 	user: UserCredential | null;
+  error: AuthError | null
 }
 
 export { AuthState, AuthProviders, SvelteFirebaseAuthProps, AuthProviderName };

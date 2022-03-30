@@ -11,7 +11,7 @@ import type { Writable } from 'svelte/store';
 import type { AuthProviders, AuthProviderName, AuthState } from './types'
 
 const createFirebaseAuth = (auth: Auth, providers: AuthProviders) => {
-	const { subscribe, update }: Writable<AuthState> = writable({ isLoading: false, user: null });
+	const { subscribe, update }: Writable<AuthState> = writable({ isLoading: false, user: null, error: null });
 
 	const asyncRun = async <T>(operation: () => Promise<T>) => {
 		try {
@@ -19,6 +19,7 @@ const createFirebaseAuth = (auth: Auth, providers: AuthProviders) => {
 			const result = await operation();
 			return result;
 		} catch (error) {
+      setError(error)
 			return error as AuthError;
 		} finally {
 			toggleIsLoading(false);
@@ -72,6 +73,13 @@ const createFirebaseAuth = (auth: Auth, providers: AuthProviders) => {
 			return { ...state, isLoading: loading };
 		});
 	};
+
+  const setError = (error: AuthError) => {
+    update((state) => {
+			return { ...state, error: error };
+		});
+  }
+
 	return {
 		subscribe,
 		createUserWithEmailAndPassword,
@@ -81,12 +89,12 @@ const createFirebaseAuth = (auth: Auth, providers: AuthProviders) => {
 		signInWithTwitter,
 		signInWithGithub,
 		signOut,
+		toggleIsLoading,
 		updateUserState: (user) => {
 			return update((state) => {
 				return { ...state, user: user };
 			});
 		},
-		toggleIsLoading
 	};
 };
 
