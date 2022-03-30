@@ -1,17 +1,18 @@
-import { render } from '@testing-library/svelte'
-import Auth from '../auth.svelte'
+jest.mock('firebase/auth');
+import { render } from '@testing-library/svelte';
+// import Auth from '../auth.svelte'
+// import { initializeApp} from 'firebase/app'
+// import { getAuth, onAuthStateChanged } from 'firebase/auth'
+import AuthTestComp from './__utils__/AuthTestComp.svelte';
 
-test('1 + 2 = 3', () => {
-  expect(1 + 2).toBe(3);
-})
-
-
-test("should render", () => {
-  const result = render(Auth);
-
-  console.log(result)
-  expect(() => result.getByText("Hello world!")).not.toThrow();
+xdescribe('Auth.svelte', () => {
+	test('should render wrappedComponent', () => {
+		const result = render(AuthTestComp);
+		expect(() => result.getByText('Hello world!')).not.toThrow();
+	});
+	test('should setup onAuthStateChange listener when mounting the component', () => {
+		expect(1 + 2).toBe(3);
+	});
 });
 
-
-export {}
+export {};
