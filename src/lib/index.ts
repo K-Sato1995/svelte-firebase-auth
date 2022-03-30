@@ -8,14 +8,7 @@ import {
 import type { Auth } from 'firebase/auth';
 import type { UserCredential, AuthError } from 'firebase/auth';
 import type { Writable } from 'svelte/store';
-import type { AuthProviders } from './types'
-
-type AuthProviderName = 'google' | 'facebook' | 'twitter' | 'github';
-
-export interface AuthState {
-	isLoading: boolean;
-	user: UserCredential | null;
-}
+import type { AuthProviders, AuthProviderName, AuthState } from './types'
 
 const createFirebaseAuth = (auth: Auth, providers: AuthProviders) => {
 	const { subscribe, update }: Writable<AuthState> = writable({ isLoading: false, user: null });
@@ -56,7 +49,7 @@ const createFirebaseAuth = (auth: Auth, providers: AuthProviders) => {
 			const authProvider = providers[providerName];
 
 			if (!authProvider) {
-				throw new Error(`${providerName} is Not available. See more ->`);
+				throw new Error(`${providerName} is not a valid provider. Please provide a valid provider instance.`);
 			}
 
 			if (isRedirect) {
@@ -66,13 +59,13 @@ const createFirebaseAuth = (auth: Auth, providers: AuthProviders) => {
 			}
 		});
 
-	const signInWithGoogle = (isRedirect = false) => signInWithProvider('google', isRedirect);
+	const signInWithGoogle = (isRedirect = false) => signInWithProvider('googleProvider', isRedirect);
 
-	const signInWithFacebook = (isRedirect = false) => signInWithProvider('facebook', isRedirect);
+	const signInWithFacebook = (isRedirect = false) => signInWithProvider('facebookProvider', isRedirect);
 
-	const signInWithTwitter = (isRedirect = false) => signInWithProvider('twitter', isRedirect);
+	const signInWithTwitter = (isRedirect = false) => signInWithProvider('twitterProvider', isRedirect);
 
-	const signInWithGithub = (isRedirect = false) => signInWithProvider('github', isRedirect);
+	const signInWithGithub = (isRedirect = false) => signInWithProvider('githubProvider', isRedirect);
 
 	const toggleIsLoading = (loading: boolean) => {
 		update((state) => {
