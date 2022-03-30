@@ -3,15 +3,19 @@ import {
 	createUserWithEmailAndPassword as firebaseCreateUserWithEmailAndPassword,
 	signInWithEmailAndPassword as firebaseSignInWithEmailAndPassword,
 	signInWithRedirect,
-	signInWithPopup,
+	signInWithPopup
 } from 'firebase/auth';
 import type { Auth } from 'firebase/auth';
 import type { UserCredential, AuthError } from 'firebase/auth';
 import type { Writable } from 'svelte/store';
-import type { AuthProviders, AuthProviderName, AuthState } from './types'
+import type { AuthProviders, AuthProviderName, AuthState } from './types';
 
 const createFirebaseAuth = (auth: Auth, providers: AuthProviders) => {
-	const { subscribe, update }: Writable<AuthState> = writable({ isLoading: false, user: null, error: null });
+	const { subscribe, update }: Writable<AuthState> = writable({
+		isLoading: false,
+		user: null,
+		error: null
+	});
 
 	const asyncRun = async <T>(operation: () => Promise<T>) => {
 		try {
@@ -19,7 +23,7 @@ const createFirebaseAuth = (auth: Auth, providers: AuthProviders) => {
 			const result = await operation();
 			return result;
 		} catch (error) {
-      setError(error)
+			setError(error);
 			return error as AuthError;
 		} finally {
 			toggleIsLoading(false);
@@ -50,7 +54,9 @@ const createFirebaseAuth = (auth: Auth, providers: AuthProviders) => {
 			const authProvider = providers[providerName];
 
 			if (!authProvider) {
-				throw new Error(`${providerName} is not a valid provider. Please provide a valid provider instance.`);
+				throw new Error(
+					`${providerName} is not a valid provider. Please provide a valid provider instance.`
+				);
 			}
 
 			if (isRedirect) {
@@ -62,9 +68,11 @@ const createFirebaseAuth = (auth: Auth, providers: AuthProviders) => {
 
 	const signInWithGoogle = (isRedirect = false) => signInWithProvider('googleProvider', isRedirect);
 
-	const signInWithFacebook = (isRedirect = false) => signInWithProvider('facebookProvider', isRedirect);
+	const signInWithFacebook = (isRedirect = false) =>
+		signInWithProvider('facebookProvider', isRedirect);
 
-	const signInWithTwitter = (isRedirect = false) => signInWithProvider('twitterProvider', isRedirect);
+	const signInWithTwitter = (isRedirect = false) =>
+		signInWithProvider('twitterProvider', isRedirect);
 
 	const signInWithGithub = (isRedirect = false) => signInWithProvider('githubProvider', isRedirect);
 
@@ -74,11 +82,11 @@ const createFirebaseAuth = (auth: Auth, providers: AuthProviders) => {
 		});
 	};
 
-  const setError = (error: AuthError) => {
-    update((state) => {
+	const setError = (error: AuthError) => {
+		update((state) => {
 			return { ...state, error: error };
 		});
-  }
+	};
 
 	return {
 		subscribe,
@@ -94,7 +102,7 @@ const createFirebaseAuth = (auth: Auth, providers: AuthProviders) => {
 			return update((state) => {
 				return { ...state, user: user };
 			});
-		},
+		}
 	};
 };
 
