@@ -19,14 +19,14 @@ const createFirebaseAuth = (auth: Auth, providers: AuthProviders) => {
 
 	const asyncRun = async <T>(operation: () => Promise<T>) => {
 		try {
-			toggleIsLoading(true);
+			setIsLoading(true);
 			const result = await operation();
 			return result;
 		} catch (error) {
 			setError(error);
 			return error as AuthError;
 		} finally {
-			toggleIsLoading(false);
+			setIsLoading(false);
 		}
 	};
 
@@ -76,7 +76,7 @@ const createFirebaseAuth = (auth: Auth, providers: AuthProviders) => {
 
 	const signInWithGithub = (isRedirect = false) => signInWithProvider('githubProvider', isRedirect);
 
-	const toggleIsLoading = (loading: boolean) => {
+	const setIsLoading = (loading: boolean) => {
 		update((state) => {
 			return { ...state, isLoading: loading };
 		});
@@ -97,7 +97,7 @@ const createFirebaseAuth = (auth: Auth, providers: AuthProviders) => {
 		signInWithTwitter,
 		signInWithGithub,
 		signOut,
-		toggleIsLoading,
+		setIsLoading,
 		updateUserState: (user) => {
 			return update((state) => {
 				return { ...state, user: user };
